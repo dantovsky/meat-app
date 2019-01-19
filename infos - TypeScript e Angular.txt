@@ -748,3 +748,120 @@ faz-se isso no módulo raiz:
   import { NgModule, LOCALE_ID } from '@angular/core';
 - na lista de providers precisamos trocar o valor da localização utilizando esse token ::
   providers: [RestaurantsService, ShoppingCartService, {provide: LOCALE_ID, useValue: 'pt-BR'}],
+
+------------------------------------------------------------------
+# 55 Template Forms
+------------------------------------------------------------------
+Forma declarativa de configurar formulários no template do componente.
+
+# Config no app.module.ts ::
+- import { FormsModule } from '@angular/forms'
+- imports: [
+  BrowserModule,
+  HttpModule,
+  FormsModule, ------------------------------| Add também no imports @ngModule
+  RouterModule.forRoot(ROUTES)
+],
+
+Usamos a diretiva ngModel nos inputs que devem ser controlados pelo framework.
+
+# DIRETIVA "ngForm" :: O Angular associa implicitamente a diretiva ngForm a uma tag <form>.
+Com essa diretiva podemos determinar:
+- validade do form
+- valor
+- outros status: dirty, pristine e touched
+
+Com "template forms" é preciso usar a diretiva ngModel (o atributo name será obrigatório)
+
+Form rastreia os campos com ngModel e passa a ficar ciente do valor do campo
+<form>
+	<input type="text" name="name" ngModel>
+</form>
+Neste exemplo:
+- form valid se name valid
+- form invalid se name invalid
+
+# ONE-WAY BINDING associando o campo a uma propriedade de um componente:
+<form>
+	<input type="text" name="name" [ngModel]="username">
+</form>
+// -----------------------------------| Nesse caso, apenas quando o valor do componente mudar o valor é atualizado (o contrário não acontece)
+@Component({...})
+export class UserComponent {
+  username: string = "Nome do usuário"
+}
+
+# TWO-WAY BINDING associando o campo a uma propriedade de um componente (nas duas vias de sentido):
+<form>
+	<input type="text" name="name" [(ngModel)]="username">
+</form>
+// -----------------------------------| Nesse caso, se o campo mudar, o valor da propriedade do componente também muda
+@Component({...})
+export class UserComponent {
+  username: string = "Nome do usuário"
+}
+
+# ngForm permite acessar propriedades do formulário
+Podemos obter uma ref a diretiva através de template variables e construir expressões que ajudam a controlar o acesso a certos componentes do form,
+por exemplo: habilitar ou não um botão baseado da validade do próprio form.
+<form #myForm="ngForm">
+	<input type="text" name="name" ngModel>
+	<input type="text" name="lastname" ngModel>
+	<input type="text" name="address" ngModel>
+
+	<button [disabled]="myForm.invalid"></button>
+</form>
+
+# Desabilitar a validação de forms do browser
+Cada browser tem um estilo de validação diferente. Portanto criamos uma experiência comum com o Angular
+<form novalidate>
+
+# Debugger e ver valores do template forms ::
+podemos analisar os dados com a exibição dos valores (utilizando a template variable):
+{{form.valid}} {{form.value | json}}
+
+
+------------------------------------------------------------------
+# 58 Validação com Template Forms
+------------------------------------------------------------------
+A diretiva ngModel disponibiliza os seguintes estados que podem ser verificados para dar feedback visual ao user:
+- VALID | INVALID :: se o valor do campo está de acordo ou não com as regras de validação
+- PRISTINE | DIRTY :: pristine representa o estado inicial do campo ou form, uma vez que o user digita no campo ele se torna DIRTY e não volta mais
+- UNTOUCHED | TOUCHED :: touched indica quando o user entra no campo
+
+A diff entre DIRTY e TOUCHED é que para o campo ficar no estado DIRTY o user precisa modificá-lo
+
+Para saber o em qual estado o campo se encontra, precisamos obrer uma referência para a diretiva ngModel do campo
+<form #myForm="ngForm">
+	<input name="name" [ngModel]="username" #ipt="ngModel">
+	<span *ngIf="ipt.invalid">Nome inválido</span>
+</form>
+
+# VALIDATORS
+Podemos atribuir as seguintes validações a um campo:
+- REQUIRED
+- PATTERN - REGEX => expressão regular para validar baseado no pardão informado
+- minLENGTH & maxLENGTH
+
+<form>
+	<input name="name" [ngModel]="username" #ipt="ngModel"
+    required minlength="5">
+	<span *ngIf="ipt.invalid">Nome inválido</span>
+</form>
+
+# Para ajudar dar o feedback visual ao user, o Angular associa aos campos e ao form as classes ::
+- NG-VALID | NG-INVALID
+- NG-PRISTINE | NG-DIRTY
+- NG-UNTOUCHED | NG-TOUCHED
+
+ERRO na consola do Chrome logo após fazer o #iptAddress="ngModel ::
+Unhandled Promise rejection: Template parse errors:
+There is no directive with "exportAs" set to "ngModel" ("o</label>
+            <input type="text" class="form-control" name="address" required minlength="5" [ERROR ->]#iptAddress="ngModel" placeholder="Endereço" autocomplete="off">
+            <span class="help-block""): ng:///AppModule/OrderComponent.html@28:90 ; Zone: <root> ; Task: Promise.then ; Value: Error: Template parse errors: (...)
+
+Solução no StackOverflow
+https://stackoverflow.com/questions/38648407/angular2-error-there-is-no-directive-with-exportas-set-to-ngform
+
+Solução mais simples que funcionou para mim :: apenas coloquei novamente o ngModel juntamente com o #iptAddress="ngModel" na inpunt, ficando assim:
+<input type="text" class="form-control" name="address" required minlength="5" ngModel #iptAddress="ngModel" placeholder="Endereço" autocomplete="off">
