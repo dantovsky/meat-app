@@ -1,0 +1,16 @@
+<!--INÍCIO DO MENU -->
+<div class="col-md-9 col-xs-12">
+
+  <!-- O pipe async vai se inscrever no menu, que é um Observable, vai pegar os itens, vai passar para o ngFor e vai iterar -->
+  <mt-menu-item
+    *ngFor="let item of menu | async"
+    [menuItem]="item"
+    (add)="addMenuItem($event)">
+  </mt-menu-item>
+
+</div>
+<div class="col-md-3 col-xs-12">
+  <!-- CARRINHO -->
+  <mt-shopping-cart></mt-shopping-cart>
+</div>
+<!-- FIM DO MENU -->
