@@ -1,10 +1,18 @@
-﻿# Iniciar o app MEAT-APP
+﻿# Iniciar a Aplicação MEAT-APP
 
-Na linha de comandos:
-- Start Angular server: ng serve
-- Start JSON Server: json-server --watch db.json
+Proparação do ambiente
+- ter o NodeJS instalado -------------------------| https://nodejs.org/en/
+- npm install -g @angular/cli --------------------| instalar o Angular CLI
 
-Arquivos até a aula 51.
+Na pasta do projeto
+- npm install ------------------------------------| instalar as dependências
+- npm install -g json-server ---------------------| lib emular um API server
+
+Rodar a aplicação
+- ng serve ou npm start --------------------------| start Angular server
+- json-server --watch db.json --------------------| start JSON Server com o conteúdo de db.json
+
+Arquivos até a aula 61.
 
 # Arquivos Iniciais do Meat - Angular App Starter
 

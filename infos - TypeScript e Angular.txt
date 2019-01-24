@@ -910,4 +910,22 @@ CONTENT PROJECTION
   1. import NgModel em angular/forms
   2. ContentChild em @angular/core
 
-- 
+------------------------------------------------------------------
+# 62 Validação com Expressões Regulares
+------------------------------------------------------------------
+Feito com o atributo pattern.
+
+# Email Regex
+`/^(([^<>()\[\]\.,;:\s@\"]+(\.[^<>()\[\]\.,;:\s@\"]+)*)|(\".+\"))@(([^<>()[\]\.,;:\s@\"]+\.)+[^<>()[\]\.,;:\s@\"]{2,})$/i`
+
+# Number Regex
+`/^[0-9]*$/`
+
+------------------------------------------------------------------
+# 63 ControlValueAccessor
+------------------------------------------------------------------
+Ao usar a interface ControlValueAccessor precisa implementar os seus métodos:
+- writeValue(obj: any): void;
+- registerOnChange(fn: any): void;
+- registerOnTouched(fn: any): void;
+- setDisabledState?(isDisabled: boolean): void;
