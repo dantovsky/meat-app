@@ -929,3 +929,15 @@ Ao usar a interface ControlValueAccessor precisa implementar os seus métodos:
 - registerOnChange(fn: any): void;
 - registerOnTouched(fn: any): void;
 - setDisabledState?(isDisabled: boolean): void;
+
+------------------------------------------------------------------
+Navegação Programática via Router
+------------------------------------------------------------------
+- Precisa fazer import Router:
+  import { Router } from '@angular/router'
+
+- Instanciar no constructor:
+  private router: Router
+
+- Usar o método navigate()
+  this.router.navigate(['/order-summary'])
