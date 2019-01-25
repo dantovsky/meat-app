@@ -12,7 +12,7 @@ Rodar a aplicação
 - ng serve ou npm start --------------------------| start Angular server
 - json-server --watch db.json --------------------| start JSON Server com o conteúdo de db.json
 
-Arquivos até a aula 61.
+Arquivos até a aula 64.
 
 # Arquivos Iniciais do Meat - Angular App Starter
 
