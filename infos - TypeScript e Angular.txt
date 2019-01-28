@@ -941,3 +941,97 @@ Navegação Programática via Router
 
 - Usar o método navigate()
   this.router.navigate(['/order-summary'])
+
+------------------------------------------------------------------
+REACTIVE FORMS
+------------------------------------------------------------------
+Nova forma que o Angular traz para implementar formulários.
+Ao invés de usar ngModel e validadores nos campos criamos instancias de FORM GROUP ou FORM CONTROL
+dentro de um componente.
+
+// O form é representado por FormGroup que vai agrupar um ou mais campos dentro dele
+// Pra ajudar nessa tarefa o Angula disponibiliza o obj FormBuilder, que ajuda na criação dos campos e outros grupos.
+// FormBuilder tem um método chamado group({}) onde recebe um obj com propriedades representando cada campo do form.
+@Component({...})
+export class UserComponent implements OnInit {
+
+  userForm: FormGroup
+
+  constructor(private fb: FormBuiler) {}
+
+  ngOnInit() {
+    this.userForm = this.fb.group({
+      username: '', -------------------------------------------- | campo iniciado com valor vazio
+      password: '' --------------------------------------------- | campo iniciado com valor vazio
+    })
+  }
+}
+
+// --- Mesmo resultado usando o método control(), do FormBuiler
+
+@Component({...})
+export class UserComponent implements OnInit {
+
+  userForm: FormGroup
+
+  constructor(private fb: FormBuiler) {}
+
+  ngOnInit() {
+    this.userForm = this.fb.group({
+      username: this.fb.control(''),
+      password: this.fb.control('') ---------------------------- | FormControl
+    })
+  }
+}
+
+// --- Os validadores podem ser passados em um array ao criar o FormControl
+
+this.userForm = this.fb.group({
+  username: this.fb.control('', [validators.required]), ---------| campo obrigatório
+  password: this.fb.control('', [validators.required]) ----------| tem que ter no mín 3 caracteres
+})
+
+VALIDATORS :: Reactve Forms te os validadores padrão (todos declarados como funções estáticas da classe Validators):
+- minlength(..) | maxlength(..)
+- required
+- patern(..)
+
+Se o form tiver campos que fazem sentido serem agrupados, pode-se fazer isso com um outro Form Group.
+A vantagem de um group é que pode aplicar validadores ao nível do grupo para validar valores entre os componentes.
+Ex. para o endereço:
+
+@Component({...})
+export class UserComponent implements OnInit {
+
+  userForm: FormGroup
+
+  constructor(private fb: FormBuiler) {}
+
+  ngOnInit() {
+    this.userForm = this.fb.group({
+      username: '', -------------------------------------------- | campo iniciado com valor vazio
+      password: '' --------------------------------------------- | campo iniciado com valor vazio
+      address: this.fb.group({
+        street: '',
+        zip:
+      })
+    })
+  }
+}
+
+Ex de como fica o template (não vai mais usar o ngModel).
+O form será associado com o grupo do componente através da diretiva "formGroup".
+Cada componente será associado com "formControlName":
+
+<form [formGroupName]="userForm"> -----------------------------------| diretiva formGroupName
+	<input type="text" formControlName="username"/>
+  <input type="password" formControlName="password"/>
+  <div formGroupName="address">
+    <input type="text" formControlName="street"/>
+    <input type="text" formControlName="zip"/>
+  </div>
+</form>
+
+// --- A partir deste ponto, como o programa MEAT APP será refatorado de Template Forms para Reactive Forms,
+foi criado um novo repositório Git:
+https://github.com/dantovsky/meat-app-reactive-forms
